@@ -7,39 +7,37 @@ public class AddFractionsTest {
     @Test
     public void zeroPlusZero() throws Exception {
         Fraction sum = new Fraction(0).plus(new Fraction(0));
-        Assert.assertEquals(0, sum.intValue());
+        Assert.assertEquals(new Fraction(0), sum);
     }
 
     @Test
     public void notZeroPlusZero() throws Exception {
         Fraction sum = new Fraction(3).plus(new Fraction(0));
-        Assert.assertEquals(3, sum.intValue());
+        Assert.assertEquals(new Fraction(3), sum);
     }
 
     @Test
     public void zeroPlusNotZero() throws Exception {
         Fraction sum = new Fraction(0).plus(new Fraction(7));
-        Assert.assertEquals(7, sum.intValue());
+        Assert.assertEquals(new Fraction(7), sum);
     }
 
     @Test
     public void notZeroPlusNotZero() throws Exception {
         Fraction sum = new Fraction(3).plus(new Fraction(9));
-        Assert.assertEquals(12, sum.intValue());
+        Assert.assertEquals(new Fraction(12), sum);
     }
 
     @Test
     public void sameDenominators() throws Exception {
         Fraction sum = new Fraction(1, 5).plus(new Fraction(2, 5));
-        Assert.assertEquals(3, sum.getNumerator());
-        Assert.assertEquals(5, sum.getDenominator());
+        Assert.assertEquals(new Fraction(3, 5), sum);
     }
 
     @Test
     public void differentDenominatorsWithoutNeedingToReduceTheResult() throws Exception {
         Fraction sum = new Fraction(3, 7).plus(new Fraction(2, 3));
-        Assert.assertEquals(23, sum.getNumerator());
-        Assert.assertEquals(21, sum.getDenominator());
+        Assert.assertEquals(new Fraction(23, 21), sum);
     }
 
     public static class Fraction {
@@ -79,6 +77,27 @@ public class AddFractionsTest {
 
         public int getDenominator() {
             return denominator;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (other instanceof Fraction) {
+                Fraction that = (Fraction) other;
+                return this.numerator * that.denominator == this.denominator * that.numerator;
+            }
+            else {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            return 0;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%d/%d", numerator, denominator);
         }
     }
 }
