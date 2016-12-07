@@ -1,0 +1,12 @@
+# IDEA
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/uiDesigner.xml
+
+# Gradle
+.gradle
+build
+
+# Java
+*.class
+
