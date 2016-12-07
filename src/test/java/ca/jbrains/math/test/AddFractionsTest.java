@@ -54,17 +54,9 @@ public class AddFractionsTest {
         }
 
         public Fraction plus(Fraction that) {
-            // REFACTOR Uh... what?
-            if (this.denominator == 1)
-                return new Fraction(
-                        this.numerator * that.denominator + that.numerator * this.denominator,
-                        this.denominator * that.denominator);
-            else if (this.denominator == that.denominator)
-                return new Fraction(this.numerator + that.numerator, this.denominator);
-            else
-                return new Fraction(
-                        this.numerator * that.denominator + that.numerator * this.denominator,
-                        this.denominator * that.denominator);
+            return new Fraction(
+                    this.numerator * that.denominator + that.numerator * this.denominator,
+                    this.denominator * that.denominator);
         }
 
         public int intValue() {
@@ -84,8 +76,7 @@ public class AddFractionsTest {
             if (other instanceof Fraction) {
                 Fraction that = (Fraction) other;
                 return this.numerator * that.denominator == this.denominator * that.numerator;
-            }
-            else {
+            } else {
                 return false;
             }
         }
