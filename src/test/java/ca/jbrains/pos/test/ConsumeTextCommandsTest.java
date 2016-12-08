@@ -113,10 +113,6 @@ public class ConsumeTextCommandsTest {
                 ));
     }
 
-    public interface BarcodeScannedListener {
-        void onBarcode(String barcode);
-    }
-
     public static class ConsumeTextCommands {
         private final BarcodeScannedListener barcodeScannedListener;
 
