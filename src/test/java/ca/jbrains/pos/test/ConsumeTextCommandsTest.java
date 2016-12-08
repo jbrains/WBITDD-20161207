@@ -56,6 +56,63 @@ public class ConsumeTextCommandsTest {
                 ));
     }
 
+    @Test
+    public void emptyCommands() throws Exception {
+        final BarcodeScannedListener barcodeScannedListener = context.mock(BarcodeScannedListener.class);
+
+        context.checking(new Expectations() {{
+            oneOf(barcodeScannedListener).onBarcode(with("::barcode 1::"));
+            oneOf(barcodeScannedListener).onBarcode(with("::barcode 2::"));
+            oneOf(barcodeScannedListener).onBarcode(with("::barcode 3::"));
+        }});
+
+        new ConsumeTextCommands(barcodeScannedListener)
+                .consume(new StringReader(
+                        "\n" +
+                        "\n" +
+                        "::barcode 1::\n" +
+                        "\n" +
+                        "\n" +
+                        "\n" +
+                        "::barcode 2::\n" +
+                        "\n" +
+                        "\n" +
+                        "\n" +
+                        "::barcode 3::\n" +
+                        "\n" +
+                        "\n" +
+                        "\n"
+                ));
+    }
+    @Test
+    public void insignificantWhitespace() throws Exception {
+        final BarcodeScannedListener barcodeScannedListener = context.mock(BarcodeScannedListener.class);
+
+        context.checking(new Expectations() {{
+            oneOf(barcodeScannedListener).onBarcode(with("::barcode 1::"));
+            oneOf(barcodeScannedListener).onBarcode(with("::barcode 2::"));
+            oneOf(barcodeScannedListener).onBarcode(with("::barcode 3::"));
+        }});
+
+        new ConsumeTextCommands(barcodeScannedListener)
+                .consume(new StringReader(
+                        "\t\t\n" +
+                        "\n" +
+                        "   \t ::barcode 1:: \t  \n" +
+                        "\n" +
+                        "  \t\t  \n" +
+                        "\n" +
+                        "  \t  ::barcode 2::\n" +
+                        "      \n" +
+                        "\n" +
+                        "\n" +
+                        "::barcode 3::         \t\n" +
+                        "\n" +
+                        "     \t     \n" +
+                        "\n"
+                ));
+    }
+
     public interface BarcodeScannedListener {
         void onBarcode(String barcode);
     }
@@ -69,6 +126,8 @@ public class ConsumeTextCommandsTest {
 
         public void consume(Reader commandSource) throws IOException {
             new BufferedReader(commandSource).lines()
+                    .map(String::trim)
+                    .filter((line) -> !line.isEmpty())
                     .forEachOrdered(barcodeScannedListener::onBarcode);
         }
     }
