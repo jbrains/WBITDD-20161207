@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.stream.Stream;
 
 public class ConsumeTextCommandsTest {
     @Rule
@@ -16,115 +17,127 @@ public class ConsumeTextCommandsTest {
 
     @Test
     public void oneBarcode() throws Exception {
-        final BarcodeScannedListener barcodeScannedListener = context.mock(BarcodeScannedListener.class);
+        final CommandInterpreter commandInterpreter = context.mock(CommandInterpreter.class);
 
         context.checking(new Expectations() {{
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command text::"));
         }});
 
-        new ConsumeTextCommands(barcodeScannedListener)
-                .consume(new StringReader("::barcode::\n"));
+        new ConsumeTextCommands(commandInterpreter).consume(new StringReader("::command text::\n"));
     }
 
     @Test
     public void noBarcodes() throws Exception {
-        final BarcodeScannedListener barcodeScannedListener = context.mock(BarcodeScannedListener.class);
+        final CommandInterpreter commandInterpreter = context.mock(CommandInterpreter.class);
 
         context.checking(new Expectations() {{
-            never(barcodeScannedListener);
+            never(commandInterpreter);
         }});
 
-        new ConsumeTextCommands(barcodeScannedListener)
-                .consume(new StringReader(""));
+        new ConsumeTextCommands(commandInterpreter).consume(new StringReader(""));
     }
 
     @Test
     public void severalBarcodes() throws Exception {
-        final BarcodeScannedListener barcodeScannedListener = context.mock(BarcodeScannedListener.class);
+        final CommandInterpreter commandInterpreter = context.mock(CommandInterpreter.class);
 
         context.checking(new Expectations() {{
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode 1::"));
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode 2::"));
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode 3::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command 1::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command 2::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command 3::"));
         }});
 
-        new ConsumeTextCommands(barcodeScannedListener)
+        new ConsumeTextCommands(commandInterpreter)
                 .consume(new StringReader(
-                        "::barcode 1::\n" +
-                        "::barcode 2::\n" +
-                        "::barcode 3::\n"
+                        "::command 1::\n" +
+                                "::command 2::\n" +
+                                "::command 3::\n"
                 ));
     }
 
     @Test
     public void emptyCommands() throws Exception {
-        final BarcodeScannedListener barcodeScannedListener = context.mock(BarcodeScannedListener.class);
+        final CommandInterpreter commandInterpreter = context.mock(CommandInterpreter.class);
 
         context.checking(new Expectations() {{
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode 1::"));
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode 2::"));
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode 3::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command 1::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command 2::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command 3::"));
         }});
 
-        new ConsumeTextCommands(barcodeScannedListener)
+        new ConsumeTextCommands(commandInterpreter)
                 .consume(new StringReader(
                         "\n" +
-                        "\n" +
-                        "::barcode 1::\n" +
-                        "\n" +
-                        "\n" +
-                        "\n" +
-                        "::barcode 2::\n" +
-                        "\n" +
-                        "\n" +
-                        "\n" +
-                        "::barcode 3::\n" +
-                        "\n" +
-                        "\n" +
-                        "\n"
+                                "\n" +
+                                "::command 1::\n" +
+                                "\n" +
+                                "\n" +
+                                "\n" +
+                                "::command 2::\n" +
+                                "\n" +
+                                "\n" +
+                                "\n" +
+                                "::command 3::\n" +
+                                "\n" +
+                                "\n" +
+                                "\n"
                 ));
     }
+
     @Test
     public void insignificantWhitespace() throws Exception {
-        final BarcodeScannedListener barcodeScannedListener = context.mock(BarcodeScannedListener.class);
+        final CommandInterpreter commandInterpreter = context.mock(CommandInterpreter.class);
 
         context.checking(new Expectations() {{
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode 1::"));
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode 2::"));
-            oneOf(barcodeScannedListener).onBarcode(with("::barcode 3::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command 1::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command 2::"));
+            oneOf(commandInterpreter).interpretCommand(with("::command 3::"));
+
         }});
 
-        new ConsumeTextCommands(barcodeScannedListener)
+        new ConsumeTextCommands(commandInterpreter)
                 .consume(new StringReader(
                         "\t\t\n" +
-                        "\n" +
-                        "   \t ::barcode 1:: \t  \n" +
-                        "\n" +
-                        "  \t\t  \n" +
-                        "\n" +
-                        "  \t  ::barcode 2::\n" +
-                        "      \n" +
-                        "\n" +
-                        "\n" +
-                        "::barcode 3::         \t\n" +
-                        "\n" +
-                        "     \t     \n" +
-                        "\n"
+                                "\n" +
+                                "   \t ::command 1:: \t  \n" +
+                                "\n" +
+                                "  \t\t  \n" +
+                                "\n" +
+                                "  \t  ::command 2::\n" +
+                                "      \n" +
+                                "\n" +
+                                "\n" +
+                                "::command 3::         \t\n" +
+                                "\n" +
+                                "     \t     \n" +
+                                "\n"
                 ));
+    }
+
+    public interface CommandInterpreter {
+        void interpretCommand(String commandText);
     }
 
     public static class ConsumeTextCommands {
-        private final BarcodeScannedListener barcodeScannedListener;
+        private final CommandInterpreter commandInterpreter;
 
-        public ConsumeTextCommands(BarcodeScannedListener barcodeScannedListener) {
-            this.barcodeScannedListener = barcodeScannedListener;
+        public ConsumeTextCommands(CommandInterpreter commandInterpreter) {
+            this.commandInterpreter = commandInterpreter;
         }
 
         public void consume(Reader commandSource) throws IOException {
-            new BufferedReader(commandSource).lines()
+            sanitizeCommands(streamCommands(commandSource))
+                    .forEachOrdered(commandInterpreter::interpretCommand);
+        }
+
+        private Stream<String> sanitizeCommands(Stream<String> commandStream) {
+            return commandStream
                     .map(String::trim)
-                    .filter((line) -> !line.isEmpty())
-                    .forEachOrdered(barcodeScannedListener::onBarcode);
+                    .filter((line) -> !line.isEmpty());
+        }
+
+        private Stream<String> streamCommands(Reader commandSource) {
+            return new BufferedReader(commandSource).lines();
         }
     }
 }
