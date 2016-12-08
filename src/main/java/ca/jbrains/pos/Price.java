@@ -1,4 +1,4 @@
-package ca.jbrains.pos.test;
+package ca.jbrains.pos;
 
 import lombok.Value;
 

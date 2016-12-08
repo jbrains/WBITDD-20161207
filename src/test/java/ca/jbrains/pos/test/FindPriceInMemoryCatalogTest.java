@@ -1,5 +1,8 @@
 package ca.jbrains.pos.test;
 
+import ca.jbrains.pos.Catalog;
+import ca.jbrains.pos.InMemoryCatalog;
+import ca.jbrains.pos.Price;
 import com.google.common.collect.ImmutableMap;
 
 public class FindPriceInMemoryCatalogTest extends FindPriceInCatalogContract {
@@ -22,15 +25,4 @@ public class FindPriceInMemoryCatalogTest extends FindPriceInCatalogContract {
         ));
     }
 
-    public static class InMemoryCatalog implements Catalog {
-        private final ImmutableMap<String, Price> pricesByBarcode;
-
-        public InMemoryCatalog(ImmutableMap<String, Price> pricesByBarcode) {
-            this.pricesByBarcode = pricesByBarcode;
-        }
-
-        public Price findPrice(String barcode) {
-            return pricesByBarcode.get(barcode);
-        }
-    }
 }

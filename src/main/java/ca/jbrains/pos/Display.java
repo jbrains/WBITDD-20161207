@@ -1,4 +1,4 @@
-package ca.jbrains.pos.test;
+package ca.jbrains.pos;
 
 public interface Display {
     void displayPrice(Price price);

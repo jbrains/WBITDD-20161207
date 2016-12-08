@@ -1,4 +1,4 @@
-package ca.jbrains.pos.test;
+package ca.jbrains.pos;
 
 public class SellOneItemController implements BarcodeScannedListener {
     private final Catalog catalog;
@@ -10,11 +10,6 @@ public class SellOneItemController implements BarcodeScannedListener {
     }
 
     public void onBarcode(String barcode) {
-        if ("".equals(barcode)) {
-            display.displayScannedEmptyBarcodeMessage();
-            return;
-        }
-
         final Price price = catalog.findPrice(barcode);
         if (price == null)
             display.displayProductNotFoundMessage(barcode);

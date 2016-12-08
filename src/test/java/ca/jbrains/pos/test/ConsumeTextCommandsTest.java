@@ -1,15 +1,13 @@
 package ca.jbrains.pos.test;
 
+import ca.jbrains.pos.CommandInterpreter;
+import ca.jbrains.pos.ConsumeTextCommands;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
-import java.util.stream.Stream;
 
 public class ConsumeTextCommandsTest {
     @Rule
@@ -114,30 +112,4 @@ public class ConsumeTextCommandsTest {
                 ));
     }
 
-    public interface CommandInterpreter {
-        void interpretCommand(String commandText);
-    }
-
-    public static class ConsumeTextCommands {
-        private final CommandInterpreter commandInterpreter;
-
-        public ConsumeTextCommands(CommandInterpreter commandInterpreter) {
-            this.commandInterpreter = commandInterpreter;
-        }
-
-        public void consume(Reader commandSource) throws IOException {
-            sanitizeCommands(streamCommands(commandSource))
-                    .forEachOrdered(commandInterpreter::interpretCommand);
-        }
-
-        private Stream<String> sanitizeCommands(Stream<String> commandStream) {
-            return commandStream
-                    .map(String::trim)
-                    .filter((line) -> !line.isEmpty());
-        }
-
-        private Stream<String> streamCommands(Reader commandSource) {
-            return new BufferedReader(commandSource).lines();
-        }
-    }
 }

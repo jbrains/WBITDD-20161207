@@ -1,5 +1,9 @@
 package ca.jbrains.pos.test;
 
+import ca.jbrains.pos.Catalog;
+import ca.jbrains.pos.Display;
+import ca.jbrains.pos.Price;
+import ca.jbrains.pos.SellOneItemController;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -40,19 +44,4 @@ public class SellOneItemControllerTest {
 
         controller.onBarcode("::barcode not found::");
     }
-
-    @Test
-    public void emptyBarcode() throws Exception {
-        final Catalog catalog = context.mock(Catalog.class);
-        final Display display = context.mock(Display.class);
-        final SellOneItemController controller = new SellOneItemController(null, display);
-
-        context.checking(new Expectations() {{
-            oneOf(display).displayScannedEmptyBarcodeMessage();
-        }});
-
-        controller.onBarcode("");
-        
-    }
-
 }
