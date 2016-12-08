@@ -26,9 +26,22 @@ public class ConsumeTextCommandsTest {
                 .consume(new StringReader("::barcode::\n"));
     }
 
+    @Test
+    public void noBarcodes() throws Exception {
+        final BarcodeScannedListener barcodeScannedListener = context.mock(BarcodeScannedListener.class);
+
+        context.checking(new Expectations() {{
+            never(barcodeScannedListener);
+        }});
+
+        new ConsumeTextCommands(barcodeScannedListener)
+                .consume(new StringReader(""));
+    }
+
     public interface BarcodeScannedListener {
         void onBarcode(String barcode);
     }
+
     public static class ConsumeTextCommands {
         private final BarcodeScannedListener barcodeScannedListener;
 
@@ -38,7 +51,8 @@ public class ConsumeTextCommandsTest {
 
         public void consume(Reader commandSource) throws IOException {
             final String line = new BufferedReader(commandSource).readLine();
-            barcodeScannedListener.onBarcode(line);
+            if (line != null)
+                barcodeScannedListener.onBarcode(line);
         }
     }
 }
