@@ -1,6 +1,5 @@
 package ca.jbrains.pos.test;
 
-import lombok.Value;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
@@ -66,11 +65,6 @@ public class SellOneItemControllerTest {
         void displayProductNotFoundMessage(String barcodeNotFound);
 
         void displayScannedEmptyBarcodeMessage();
-    }
-
-    @Value(staticConstructor = "cents")
-    public static class Price {
-        private final int centsValue;
     }
 
     public static class SellOneItemController {
