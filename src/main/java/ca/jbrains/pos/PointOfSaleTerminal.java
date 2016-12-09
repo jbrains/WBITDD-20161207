@@ -14,7 +14,7 @@ public class PointOfSaleTerminal {
                                         "7070529026686", Price.cents(125)
                                 )
                         ),
-                        new WriterDisplay()
+                        null
                 )::onBarcode
         ).consume(new InputStreamReader(System.in));
     }
