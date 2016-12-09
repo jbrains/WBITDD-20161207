@@ -4,7 +4,6 @@ import ca.jbrains.pos.Price;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
@@ -51,23 +50,4 @@ public class DisplayMessagesToWriterTest {
         return Arrays.asList(multilineText.split(System.lineSeparator()));
     }
 
-    public static class WriterDisplay {
-        private final PrintWriter out;
-
-        public WriterDisplay(StringWriter canvas) {
-            this.out = new PrintWriter(canvas);
-        }
-
-        public void displayScannedEmptyBarcodeMessage() {
-            out.println("Scanning error: empty barcode");
-        }
-
-        public void displayProductNotFoundMessage(String barcodeNotFound) {
-            out.println(String.format("Product not found for %s", barcodeNotFound));
-        }
-
-        public void displayPrice(Price price) {
-            out.println(String.format("EUR %.2f", price.euro()));
-        }
-    }
 }
