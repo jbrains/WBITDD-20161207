@@ -1,5 +1,6 @@
 package ca.jbrains.pos.test;
 
+import ca.jbrains.pos.Price;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,6 +34,18 @@ public class DisplayMessagesToWriterTest {
         );
     }
 
+    @Test
+    public void price() throws Exception {
+        final StringWriter canvas = new StringWriter();
+
+        new WriterDisplay(canvas).displayPrice(Price.cents(198));
+
+        Assert.assertEquals(
+                Arrays.asList("EUR 1.98"),
+                lines(canvas.toString())
+        );
+    }
+
     // REFACTOR Move to a reusable library OR replace with an existing library
     public static List<String> lines(String multilineText) {
         return Arrays.asList(multilineText.split(System.lineSeparator()));
@@ -51,6 +64,10 @@ public class DisplayMessagesToWriterTest {
 
         public void displayProductNotFoundMessage(String barcodeNotFound) {
             out.println(String.format("Product not found for %s", barcodeNotFound));
+        }
+
+        public void displayPrice(Price price) {
+            out.println(String.format("EUR %.2f", price.euro()));
         }
     }
 }
